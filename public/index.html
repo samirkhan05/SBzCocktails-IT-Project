@@ -5,10 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="manifest" href="manifest.json"
  
-
-    <!-- update the version number as needed -->
     <script defer src="/__/firebase/12.12.0/firebase-app-compat.js"></script>
-    <!-- include only the Firebase features as you need -->
     <script defer src="/__/firebase/12.12.0/firebase-auth-compat.js"></script>
     <script defer src="/__/firebase/12.12.0/firebase-database-compat.js"></script>
     <script defer src="/__/firebase/12.12.0/firebase-firestore-compat.js"></script>
@@ -19,7 +16,7 @@
     <script defer src="/__/firebase/12.12.0/firebase-remote-config-compat.js"></script>
 
 
-    <script defer src="/__/firebase/init.js?useEmulator=true"></script>
+    <script defer src="/__/firebase/init.js"></script>
 
     <title>Home</title>
     <link rel="icon" href="sb_logo_2.png" type="image/x-icon">
@@ -70,7 +67,6 @@
         .auth a {
             margin-left: 10px;
             padding: 10px 18px;
-            /* background-color: black; */
             color: white;
             border: none;
             border-radius: 5px;
@@ -193,29 +189,32 @@
     </footer>
   
 
-    <script>
-      document.addEventListener('DOMContentLoaded', function() {
-        const loadEl = document.querySelector('#load');
-        try {
-          let app = firebase.app();
-          let features = [
-            'auth', 
-            'database', 
-            'firestore',
-            'functions',
-            'messaging', 
-            'storage', 
-            'analytics', 
-            'remoteConfig',
-          ].filter(feature => typeof app[feature] === 'function');
-          loadEl.textContent = `Firebase SDK loaded with ${features.join(', ')}`;
-        } catch (e) {
-          console.error(e);
-          loadEl.textContent = 'Error loading the Firebase SDK, check the console.';
-        }
-      });
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    firebase.auth().onAuthStateChanged(function (user) {
+      const authDiv = document.querySelector('.auth');
 
-      //put code below the firebase things.
-    </script>
+      if (user) {
+//shows user is logged in
+        authDiv.innerHTML = `
+          <a href="favorites.html">Favorites</a>
+          <a href="#" id="logoutBtn">Log Out</a>
+        `;
+        document.getElementById('logoutBtn').addEventListener('click', function (e) {
+          e.preventDefault();
+          firebase.auth().signOut().then(() => {
+            window.location.href = 'index.html';
+          });
+        });
+      } else {
+   //shows log out
+        authDiv.innerHTML = `
+          <a href="log-in.html">Log In</a>
+          <a href="sign-up.html">Sign Up</a>
+        `;
+      }
+    });
+  });
+</script>
   </body>
 </html>
