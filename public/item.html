@@ -5,13 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Items</title>
     <style>
-        html, body {
+
+        * {
+            box-sizing:  border-box;
+        }
+
+      html, body {
             margin: 0;
             padding: 0;
             height: 100%; 
             width: 100%;
-            overflow-y: auto;
-            font-family: sans-serif;
+            font-family: 'Times New Roman', Times, serif;
             display: flex;
             flex-direction: column;
         }
@@ -22,35 +26,43 @@
             justify-content: space-between;
             align-items: center;
             padding: 10px 30px;
-            background-color: white;
-            border-bottom: 2px solid #f0f0f0;
-            flex-shrink: 0; 
+            background-color: #4c0e00;
+            border-bottom: 1.5px solid #1e0000;
+            flex-grow: 0; 
         }
 
-        .logo {
-            width: 100px;
+        .logo img {
             height: 50px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
+            width: 50px;
+            margin: 0;
+            padding: 0;
+            border-radius: 10px;
         }
 
         nav a {
             text-decoration: none;
-            color: black;
+            color: white;
             margin: 0 15px;
             font-size: 16px;
-            font-weight: bold;
+            font-weight: 500;
         }
 
-        .auth button {
+        .auth a {
             margin-left: 10px;
-            padding: 8px 16px;
-            background-color: black;
+            padding: 10px 18px;
             color: white;
             border: none;
             border-radius: 5px;
+            border: 1px solid #ffffff;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.1s ease-in-out 0s;
+        }
+
+        .auth a:hover {
+            border: 1px solid #4c0e00;
+            color: #4c0e00;
+            background: #ffffff;
         }
 
         main {
@@ -59,16 +71,15 @@
 
         .herosection {
             width: 100%;
-            height: 400px;
+            height: 500px;
             position: relative;
             background-color: gray;
         }
 
-        .herovideo {
+        .hero-picture {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            display: block;
         }
 
         .herocontainer {
@@ -94,15 +105,19 @@
         }
 
         .carousel {
-            padding: 40px;
+            padding: 50px;
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
             background-color: #f9f9f9;
         }
 
         .carouselcontainer {
-            width: 80%;
+            display: flex;
+            width: 90%;
+            align-items: center;
+            justify-content: start;
             overflow: hidden; 
             position: relative;
         }
@@ -121,9 +136,24 @@
             border-radius: 10px;
         }
 
+        .card img {
+            width: 100%;
+            height: 85%;
+            object-fit: cover;
+        }
+
+        .card p {
+            font-size: 18px;
+            color:  black;
+            text-align: center;
+            margin: 0;
+        }
+
         .carbtn {
             background: black;
             color: white;
+            height: 30px;
+            width: 30px;
             border: none;
             padding: 10px;
             cursor: pointer;
@@ -134,7 +164,7 @@
             padding: 40px;
         }
 
-        .filters h2 {
+        .filters h1 {
             text-align: center;
             margin-bottom: 30px;
         }
@@ -194,21 +224,26 @@
 <body>
 
     <header>
-        <div class="logo">Logo</div>
+        <a href="index.html" class="logo">
+            <img src="sb_logo_2.png" alt="Logo">
+        </a>
+        
         <nav>
             <a href="index.html">Home</a>
             <a href="item.html">Items</a>
             <a href="">Favorites</a>
         </nav>
+
+        
         <div class="auth">
-            <button>Login</button>
-            <button>Sign up</button>
+            <a href="log-in.html">Log In</a>
+            <a href="sign-up.html">Sign Up</a>
         </div>
     </header>
 
     <main>
         <div class="herosection">
-            <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=800&q=60" alt="Hero Image" class="herovideo">
+            <img src="item-hero-section.jpg" alt="Hero Image" class="hero-picture">
             <div class="herocontainer">
                 <h1 class="hero1">Discover Your Drink</h1>
                 <p class="hero2">Browse drinks from top bartenders</p><br>
@@ -220,37 +255,54 @@
             <br>
         <section class="carousel">
             <h1>The People's Choices</h1>
-            <button class="carbtn" id="prevBtn"> < </button>
+            
             <div class="carouselcontainer">
+                <button class="carbtn" id="prevBtn"> < </button>
                 <div class="carouselcards" id="cards">
-                    <div class="card"></div>
-                    <div class="card"></div>
-                    <div class="card"></div>
-                    <div class="card"></div>
+                    <!-- Carousel Card Template -->
+                    <!-- <div class="card">
+                        <img src="" alt="">
+                        <p></p>
+                    </div>
+                    <div class="card">
+                        <img src="" alt="">
+                        <p></p>
+                    </div>
+                    <div class="card">
+                        <img src="" alt="">
+                        <p></p>
+                    </div>
+                    <div class="card">
+                        <img src="" alt="">
+                        <p></p>
+                    </div> -->
                 </div>
+                <button class="carbtn" id="nextBtn"> > </button>
             </div>
-            <button class="carbtn" id="nextBtn"> > </button>
         </section>
 
         <section class="filters">
-            <h2>Add Filters</h2>
+            <h1>Add Filters</h1>
             <div class="filtercols">
                 <div class="column">
                     <h3>Category</h3>
                     <ul id="catlist">
-                        <li>Category</li>
+                        <!-- Category List Template -->
+                        <!-- <li>Category</li> -->
                     </ul>
                 </div>
                 <div class="column">
                     <h3>Alcohol</h3>
                     <ul id="alclist">
-                        <li>Alcohol</li>
+                        <!-- Alcohol List Template -->
+                        <!-- <li>Alcohol</li> -->
                     </ul>
                 </div>
                 <div class="column">
                     <h3>Glass</h3>
                     <ul id="glasslist">
-                        <li>Glass</li>
+                        <!-- Glass List Template -->
+                        <!-- <li>Glass</li> -->
                     </ul>
                 </div>
             </div>
@@ -266,7 +318,143 @@
     </footer>
 
     <script>
+        document.addEventListener('DOMContentLoaded', function () {
+        firebase.auth().onAuthStateChanged(function (user) {
+            const authDiv = document.querySelector('.auth');
+
+            if (user) {
+        //shows user is logged in
+                authDiv.innerHTML = `
+                <a href="favorites.html">Favorites</a>
+                <a href="#" id="logoutBtn">Log Out</a>
+                `;
+                document.getElementById('logoutBtn').addEventListener('click', function (e) {
+                e.preventDefault();
+                firebase.auth().signOut().then(() => {
+                    window.location.href = 'index.html';
+                });
+                });
+            } else {
+        //shows log out
+                authDiv.innerHTML = `
+                <a href="log-in.html">Log In</a>
+                <a href="sign-up.html">Sign Up</a>
+                `;
+            }
+            });
+        });
+
+        let card = [];
+        let categories = [];
+        let alcohol = [];
+        let startIndex = 0;
         
+        // Fetch random popular drinks
+        async function getRandom() {
+            try {
+                for(let i = 0; i < 32; i++) {
+                    let response = await fetch('https://www.thecocktaildb.com/api/json/v1/1/random.php');
+                    let data = await response.json();
+
+                    card.push(data.drinks[0]);
+                }
+
+                renderCarousel(card);
+            }
+            catch(error) {
+                console.log(error);
+            }
+        }
+
+        // Render carousel
+        function renderCarousel(carouselCard) {
+            let carCard = document.querySelector('#cards');
+            let html = '';
+            
+            for(let i = startIndex; i < startIndex + 4; i++) {
+                html += `
+                    <div class="card">
+                        <img src="${carouselCard[i].strDrinkThumb}" alt="Carousel Card">
+                        <p>${carouselCard[i].strDrink}</p>
+                    </div>
+                `;
+            }
+
+            carCard.innerHTML = html;
+        }
+
+        getRandom();
+
+        let prevBtn = document.querySelector('#prevBtn');
+        prevBtn.addEventListener('click', () => {
+            if(startIndex > 0) {
+                startIndex--;
+                renderCarousel(card);
+            }
+        });
+
+        let nextBtn = document.querySelector('#nextBtn');
+        nextBtn.addEventListener('click', () => {
+            if(startIndex + 4 < card.length) {
+                startIndex++;
+                renderCarousel(card);
+            }
+        });
+    
+        async function getCategories() {
+            try {
+                let response = await fetch('https://www.thecocktaildb.com/api/json/v1/1/list.php?c=list');
+                let data = await response.json();
+                categories = data.drinks;
+                renderCategories(categories);
+            }
+            catch(error) {
+                console.log(error);
+            }
+        }
+
+        function renderCategories(data) {
+            let catList = document.querySelector('#catlist');
+            let html = '';
+            
+            for(let d of data) {
+                html += `
+                    <li>${d.strCategory}</li> 
+                `;
+            }
+
+            catList.innerHTML = html;
+        }
+
+        getCategories();
+
+        async function getAlcohol() {
+            try{
+                let response = await fetch('https://www.thecocktaildb.com/api/json/v1/1/list.php?a=list');
+                let data = await response.json();
+                alcohol = data.drinks;
+
+                renderAlcohol(alcohol);
+            }
+            catch(error) {
+                console.log(error);
+            }
+        }
+
+        function renderAlchohol(data) {
+            let alcList = document.querySelector('#alclist');
+            let html = '';
+
+            for(let d of data) {
+                html += `
+                    <li>${d.strAlcoholic}</li>
+                `;
+            }
+
+            alcList.innerHTML = html;
+        }
+    
+        getAlcohol();
     </script>
 </body>
 </html>
