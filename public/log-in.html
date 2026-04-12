@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Log In</title>
+    <link rel="icon" href="sb_logo_2.png" type="image/x-icon">
+
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      html, body {
+            margin: 0;
+            padding: 0;
+            height: 100vh; 
+            width: 100vw;
+            overflow: hidden; 
+            font-family: 'Times New Roman', Times, serif;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 30px;
+            background-color: #4c0e00;
+            border-bottom: 1.5px solid #1e0000;
+            flex-grow: 0; 
+        }
+
+        .logo img {
+            height: 50px;
+            width: 50px;
+            margin: 0;
+            padding: 0;
+            border-radius: 10px;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: white;
+            margin: 0 15px;
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        .auth a {
+            margin-left: 10px;
+            padding: 10px 18px;
+            /* background-color: black; */
+            color: white;
+            border: none;
+            border-radius: 5px;
+            border: 1px solid #ffffff;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.1s ease-in-out 0s;
+        }
+
+        .auth a:hover {
+            border: 1px solid #4c0e00;
+            color: #4c0e00;
+            background: #ffffff;
+        }
+
+        main {
+          margin: 0;
+          padding: 0;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          height: 90%;
+          position: relative;
+        }
+
+        main img {
+          height: 100%;
+          width: 100%;
+          object-fit: cover;
+        }
+
+        .login-card {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          margin: auto;
+          height: 80%;
+          width: 400px;
+          background: rgba(76, 14, 0, 0.15);
+          border: 1.5px solid #4c0e00;
+          border-radius: 30px;
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+        }
+
+        .login-card h1 {
+          margin-bottom: auto;
+          color: #ffffff;
+        }
+
+        .login-card label {
+          display: flex;
+          flex-direction: column;
+          color: #ffffff;
+          margin-bottom: 15px;
+          font-size: 16px;
+        }
+
+        .login-card label input {
+          border: none;
+          font-size: 14px;
+          margin: 8px;
+          padding: 10px 12px;
+          border-radius: 15px;
+          width: 250px;
+          box-shadow: 2px 2px 10px 1px rgba(0,0,0,0.35);
+        }
+
+        .login-card button {
+          font-size: 15px;
+          margin-top: 15px;
+          color: white;
+          background: #4c0e00;
+          border: none;
+          border-radius: 20px;
+          padding: 12px 50px;
+          cursor: pointer;
+        }
+
+        .login-card button:hover {
+          opacity: 0.9;
+        }
+
+        .login-card p {
+          margin-top: auto;
+          color: #ffffff;
+        }
+
+        .login-card p a {
+          color: rgba(209, 145, 77);
+        }
+
+        .login-card p a:hover {
+          color: rgba(209, 145, 77, 0.8);
+        }
+    </style>
+  </head>
+
+  <body>
+    <header>
+        <a href="index.html" class="logo">
+            <img src="sb_logo_2.png" alt="Logo">
+        </a>
+        
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="item.html">Items</a>
+            <a href="">Favorites</a>
+        </nav>
+
+        
+        <div class="auth">
+            <a href="log-in.html">Log In</a>
+            <a href="sign-up.html">Sign Up</a>
+        </div>
+    </header>
+
+    <main>
+      <img src="log-in-sign-up.jpg" alt="Bar">
+
+      <div class="login-card">
+        <h1>Log In</h1>
+
+        <label>
+          Email
+          <input type="email" placeholder="Enter email">
+        </label>
+        <label>
+          Password
+          <input type="password" placeholder="Enter password">
+        </label>
+
+        <button>
+          Login
+        </button>
+
+        <p>
+          Don't have an account? <a href="sign-up.html">Sign up.</a>
+        </p>
+      </div>
+    </main>
+
+    <script>
+
+    </script>
+  </body>
+</html>
