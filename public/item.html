@@ -3,6 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script defer src="/__/firebase/12.12.0/firebase-app-compat.js"></script>
+<script defer src="/__/firebase/12.12.0/firebase-auth-compat.js"></script>
+<script defer src="/__/firebase/init.js"></script>
     <title>Items</title>
     <style>
 
@@ -247,7 +250,8 @@
             <div class="herocontainer">
                 <h1 class="hero1">Discover Your Drink</h1>
                 <p class="hero2">Browse drinks from top bartenders</p><br>
-                <input type="text" placeholder="Search Cocktails" style="padding: 10px; width: 300px; border-radius: 5px; border: none;">
+                <input type="text" id="searchInput" placeholder="Search Cocktails" style="padding: 10px; width: 300px; border-radius: 5px; border: none;">
+                <button onclick="searchCocktails()" style="padding: 10px 20px; margin-left: 8px; background: #4c0e00; color: white; border: none; border-radius: 5px; cursor: pointer;">Search</button>
             </div>
         </div>
             <br>
@@ -259,23 +263,7 @@
             <div class="carouselcontainer">
                 <button class="carbtn" id="prevBtn"> < </button>
                 <div class="carouselcards" id="cards">
-                    <!-- Carousel Card Template -->
-                    <!-- <div class="card">
-                        <img src="" alt="">
-                        <p></p>
-                    </div>
-                    <div class="card">
-                        <img src="" alt="">
-                        <p></p>
-                    </div>
-                    <div class="card">
-                        <img src="" alt="">
-                        <p></p>
-                    </div>
-                    <div class="card">
-                        <img src="" alt="">
-                        <p></p>
-                    </div> -->
+                    
                 </div>
                 <button class="carbtn" id="nextBtn"> > </button>
             </div>
@@ -287,22 +275,19 @@
                 <div class="column">
                     <h3>Category</h3>
                     <ul id="catlist">
-                        <!-- Category List Template -->
-                        <!-- <li>Category</li> -->
+
                     </ul>
                 </div>
                 <div class="column">
                     <h3>Alcohol</h3>
                     <ul id="alclist">
-                        <!-- Alcohol List Template -->
-                        <!-- <li>Alcohol</li> -->
+
                     </ul>
                 </div>
                 <div class="column">
                     <h3>Glass</h3>
                     <ul id="glasslist">
-                        <!-- Glass List Template -->
-                        <!-- <li>Glass</li> -->
+
                     </ul>
                 </div>
             </div>
@@ -317,144 +302,193 @@
         <p>© 2026 Cocktails</p>
     </footer>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
         firebase.auth().onAuthStateChanged(function (user) {
             const authDiv = document.querySelector('.auth');
-
             if (user) {
-        //shows user is logged in
                 authDiv.innerHTML = `
-                <a href="favorites.html">Favorites</a>
-                <a href="#" id="logoutBtn">Log Out</a>
+                    <a href="favorites.html">Favorites</a>
+                    <a href="#" id="logoutBtn">Log Out</a>
                 `;
                 document.getElementById('logoutBtn').addEventListener('click', function (e) {
-                e.preventDefault();
-                firebase.auth().signOut().then(() => {
-                    window.location.href = 'index.html';
-                });
+                    e.preventDefault();
+                    firebase.auth().signOut().then(() => {
+                        window.location.href = 'index.html';
+                    });
                 });
             } else {
-        //shows log out
                 authDiv.innerHTML = `
-                <a href="log-in.html">Log In</a>
-                <a href="sign-up.html">Sign Up</a>
+                    <a href="log-in.html">Log In</a>
+                    <a href="sign-up.html">Sign Up</a>
                 `;
             }
-            });
         });
+    });
 
-        let card = [];
-        let categories = [];
-        let alcohol = [];
-        let startIndex = 0;
-        
-        // Fetch random popular drinks
-        async function getRandom() {
-            try {
-                for(let i = 0; i < 32; i++) {
-                    let response = await fetch('https://www.thecocktaildb.com/api/json/v1/1/random.php');
-                    let data = await response.json();
+    let card = [];
+    let startIndex = 0;
 
-                    card.push(data.drinks[0]);
-                }
-
-                renderCarousel(card);
-            }
-            catch(error) {
-                console.log(error);
-            }
-        }
-
-        // Render carousel
-        function renderCarousel(carouselCard) {
-            let carCard = document.querySelector('#cards');
-            let html = '';
-            
-            for(let i = startIndex; i < startIndex + 4; i++) {
-                html += `
-                    <div class="card">
-                        <img src="${carouselCard[i].strDrinkThumb}" alt="Carousel Card">
-                        <p>${carouselCard[i].strDrink}</p>
-                    </div>
-                `;
-            }
-
-            carCard.innerHTML = html;
-        }
-
-        getRandom();
-
-        let prevBtn = document.querySelector('#prevBtn');
-        prevBtn.addEventListener('click', () => {
-            if(startIndex > 0) {
-                startIndex--;
-                renderCarousel(card);
-            }
-        });
-
-        let nextBtn = document.querySelector('#nextBtn');
-        nextBtn.addEventListener('click', () => {
-            if(startIndex + 4 < card.length) {
-                startIndex++;
-                renderCarousel(card);
-            }
-        });
-    
-        async function getCategories() {
-            try {
-                let response = await fetch('https://www.thecocktaildb.com/api/json/v1/1/list.php?c=list');
+    // Carousel function
+    async function getRandom() {
+        try {
+            for (let i = 0; i < 32; i++) {
+                let response = await fetch('https://www.thecocktaildb.com/api/json/v1/1/random.php');
                 let data = await response.json();
-                categories = data.drinks;
-                renderCategories(categories);
+                card.push(data.drinks[0]);
             }
-            catch(error) {
-                console.log(error);
-            }
+            renderCarousel(card);
+        } catch (error) {
+            console.log(error);
         }
+    }
 
-        function renderCategories(data) {
-            let catList = document.querySelector('#catlist');
-            let html = '';
-            
-            for(let d of data) {
-                html += `
-                    <li>${d.strCategory}</li> 
-                `;
-            }
-
-            catList.innerHTML = html;
+    function renderCarousel(carouselCard) {
+        let carCard = document.querySelector('#cards');
+        let html = '';
+        for (let i = startIndex; i < startIndex + 4; i++) {
+            html += `
+                <div class="card">
+                    <img src="${carouselCard[i].strDrinkThumb}" alt="Carousel Card">
+                    <p>${carouselCard[i].strDrink}</p>
+                </div>
+            `;
         }
+        carCard.innerHTML = html;
+    }
 
-        getCategories();
+    getRandom();
 
-        async function getAlcohol() {
-            try{
-                let response = await fetch('https://www.thecocktaildb.com/api/json/v1/1/list.php?a=list');
-                let data = await response.json();
-                alcohol = data.drinks;
-
-                renderAlcohol(alcohol);
-            }
-            catch(error) {
-                console.log(error);
-            }
+    document.querySelector('#prevBtn').addEventListener('click', () => {
+        if (startIndex > 0) {
+            startIndex--;
+            renderCarousel(card);
         }
+    });
 
-        function renderAlchohol(data) {
-            let alcList = document.querySelector('#alclist');
-            let html = '';
-
-            for(let d of data) {
-                html += `
-                    <li>${d.strAlcoholic}</li>
-                `;
-            }
-
-            alcList.innerHTML = html;
+    document.querySelector('#nextBtn').addEventListener('click', () => {
+        if (startIndex + 4 < card.length) {
+            startIndex++;
+            renderCarousel(card);
         }
-    
-        getAlcohol();
-    </script>
+    });
+
+    // Categories function 
+    async function getCategories() {
+        try {
+            let response = await fetch('https://www.thecocktaildb.com/api/json/v1/1/list.php?c=list');
+            let data = await response.json();
+            renderCategories(data.drinks);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    function renderCategories(data) {
+        let catList = document.querySelector('#catlist');
+        let html = '';
+        for (let d of data) {
+            html += `<li onclick="filterBy('c', '${d.strCategory}')">${d.strCategory}</li>`;
+        }
+        catList.innerHTML = html;
+    }
+
+    // Alcohol typo fixed, was previously "Alchohol"
+    async function getAlcohol() {
+        try {
+            let response = await fetch('https://www.thecocktaildb.com/api/json/v1/1/list.php?a=list');
+            let data = await response.json();
+            renderAlcohol(data.drinks);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    function renderAlcohol(data) {
+        let alcList = document.querySelector('#alclist');
+        let html = '';
+        for (let d of data) {
+            html += `<li onclick="filterBy('a', '${d.strAlcoholic}')">${d.strAlcoholic}</li>`;
+        }
+        alcList.innerHTML = html;
+    }
+
+    // Glass filter now added
+    async function getGlass() {
+        try {
+            let response = await fetch('https://www.thecocktaildb.com/api/json/v1/1/list.php?g=list');
+            let data = await response.json();
+            renderGlass(data.drinks);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    function renderGlass(data) {
+        let glassList = document.querySelector('#glasslist');
+        let html = '';
+        for (let d of data) {
+            html += `<li onclick="filterBy('g', '${d.strGlass}')">${d.strGlass}</li>`;
+        }
+        glassList.innerHTML = html;
+    }
+
+    // Filter results
+    async function filterBy(type, value) {
+        try {
+            let response = await fetch(`https://www.thecocktaildb.com/api/json/v1/1/filter.php?${type}=${encodeURIComponent(value)}`);
+            let data = await response.json();
+            renderResults(data.drinks);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+    // Search function added to search for cocktails, uses render results
+async function searchCocktails() {
+    const query = document.getElementById('searchInput').value.trim();
+
+    if (!query) return;
+
+    try {
+        let response = await fetch(`https://www.thecocktaildb.com/api/json/v1/1/search.php?s=${encodeURIComponent(query)}`);
+        let data = await response.json();
+        renderResults(data.drinks);
+
+        // Scroll down to results so user can see them
+        document.querySelector('#results').scrollIntoView({ behavior: 'smooth' });
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+// Also added trigger functionality when user presses Enter
+document.getElementById('searchInput').addEventListener('keypress', function (e) {
+    if (e.key === 'Enter') {
+        searchCocktails();
+    }
+});
+
+    function renderResults(drinks) {
+        let results = document.querySelector('#results');
+        if (!drinks) {
+            results.innerHTML = '<p>No cocktails found.</p>';
+            return;
+        }
+        let html = '';
+        for (let d of drinks) {
+            html += `
+                <div class="card">
+                    <img src="${d.strDrinkThumb}" alt="${d.strDrink}">
+                    <p>${d.strDrink}</p>
+                </div>
+            `;
+        }
+        results.innerHTML = html;
+    }
+
+    getCategories();
+    getAlcohol();
+    getGlass();
+</script>
 </body>
 </html>
