@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Favorites</title>
+
+    <link rel="icon" href="sb_logo_2.png" type="image/x-icon">
+
+    <style>
+      * {
+            box-sizing:  border-box;
+        }
+
+      html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%; 
+            width: 100%;
+            overflow: hidden; 
+            font-family: 'Times New Roman', Times, serif;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 30px;
+            background-color: #4c0e00;
+            border-bottom: 1.5px solid #1e0000;
+            flex-grow: 0; 
+        }
+
+        .logo img {
+            height: 50px;
+            width: 50px;
+            margin: 0;
+            padding: 0;
+            border-radius: 10px;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: white;
+            margin: 0 15px;
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        .auth a {
+            margin-left: 10px;
+            padding: 10px 18px;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            border: 1px solid #ffffff;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.1s ease-in-out 0s;
+        }
+
+        .auth a:hover {
+            border: 1px solid #4c0e00;
+            color: #4c0e00;
+            background: #ffffff;
+        }
+
+      .favorite-list-container {
+        padding: 15px;
+      }
+
+      .favorite-list-containerh h1 {
+        font-size: 18px;
+        margin: 0;
+        padding: 0;
+      }
+
+      .favorite-list-container p {
+        margin: 0;
+        padding: 0;
+      }
+
+      .favorite-item {
+        display: flex;
+        align-items: center;
+        justify-content: start;
+        max-width: 900px;
+        margin: 10px 0;
+      }
+
+      .favorite-item img {
+        height: 80px;
+        width: 80px;
+        object-fit: contain;
+        border-radius: 3px;
+      }
+
+      .details {
+        margin: 0 15px;
+      }
+
+      .details p {
+        margin: 0;
+        padding: 0;
+      }
+
+      .details .name {
+        font-size: 16px;
+        font-weight: 500;
+      }
+
+      .details .ingredients {
+        font-size: 14px;
+        color:  rgb(150, 150, 150);
+        margin: 5px 0;
+      }
+
+      .description {
+        display: flex;
+        margin: 0;
+      }
+
+      .description p {
+        font-size: 12px;
+        background: rgb(209, 206, 206);
+        padding: 5px 10px;
+        margin-right: 5px;
+        border-radius: 4px;
+      }
+
+      .favorite-item button {
+        background: rgb(209, 49, 84);
+        border: none;
+        padding: 10px 8px;
+        border-radius: 4px;
+        color: rgba(0, 0, 0);
+        cursor: pointer;
+      }
+
+      .favorite-item button:hover {
+        background: rgba(209, 49, 84, 0.9);
+      }
+    </style>
+  </head>
+
+  <body>
+    <header>
+        <a href="index.html" class="logo">
+            <img src="sb_logo_2.png" alt="Logo">
+        </a>
+        
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="item.html">Items</a>
+            <a href="favorite.html">Favorites</a>
+        </nav>
+
+        
+        <div class="auth">
+            <a href="log-in.html">Log In</a>
+            <a href="sign-up.html">Sign Up</a>
+        </div>
+    </header>
+
+    <main class="favorite-list-container">
+      <h1>Your Favorites</h1>
+      <p>___________________________________________________________________________________________________</p>
+      <!-- template for one favorite item -->
+      <div class="favorite-item">
+        <img src="https://www.thecocktaildb.com/images/media/drink/bry4qh1582751040.jpg" alt="">
+
+        <div class="details">
+          <p class="name">
+            Blue Margarita
+          </p>
+          <p class="ingredients">
+            Tequila, Blue Curacao, Lime Juice, Salt
+          </p>
+          
+          <div class="description">
+            <p>Ordinary Drink</p>
+            <p>Alcoholic</p>
+            <p>Cocktail Glass</p>
+          </div>
+        </div>
+
+        <button>
+          Remove From Favorites
+        </button>
+      </div>
+
+      <div class="favorite-item">
+        <img src="https://www.thecocktaildb.com/images/media/drink/5noda61589575158.jpg" alt="">
+
+        <div class="details">
+          <p class="name">
+            Margarita
+          </p>
+          <p class="ingredients">
+            Tequila, Triple Sec, Lime Juice, Salt 
+          </p>
+          
+          <div class="description">
+            <p>Ordinary Drink</p>
+            <p>Alcoholic</p>
+            <p>Cocktail Glass</p>
+          </div>
+        </div>
+
+        <button>
+          Remove From Favorites
+        </button>
+      </div>
+    </main>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        firebase.auth().onAuthStateChanged(function (user) {
+            const authDiv = document.querySelector('.auth');
+            if (user) {
+                authDiv.innerHTML = `
+                    <a href="favorites.html">Favorites</a>
+                    <a href="#" id="logoutBtn">Log Out</a>
+                `;
+                document.getElementById('logoutBtn').addEventListener('click', function (e) {
+                    e.preventDefault();
+                    firebase.auth().signOut().then(() => {
+                        window.location.href = 'index.html';
+                    });
+                });
+            } else {
+                authDiv.innerHTML = `
+                    <a href="log-in.html">Log In</a>
+                    <a href="sign-up.html">Sign Up</a>
+                `;
+            }
+        });
+    });
+    </script>
+  </body>
+</html>
