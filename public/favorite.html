@@ -4,241 +4,317 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Favorites</title>
-
     <link rel="icon" href="sb_logo_2.png" type="image/x-icon">
+    <link rel="manifest" href="manifest.json">
+
+    <script src="/__/firebase/12.12.0/firebase-app-compat.js"></script>
+    <script src="/__/firebase/12.12.0/firebase-auth-compat.js"></script>
+    <script src="/__/firebase/12.12.0/firebase-firestore-compat.js"></script>
+    <script src="/__/firebase/init.js"></script>
 
     <style>
-      * {
-            box-sizing:  border-box;
-        }
+      * { 
+        box-sizing: border-box; 
+        margin: 0; 
+        padding: 0;
+       }
 
       html, body {
-            margin: 0;
-            padding: 0;
-            height: 100%; 
-            width: 100%;
-            overflow: hidden; 
-            font-family: 'Times New Roman', Times, serif;
-            display: flex;
-            flex-direction: column;
-        }
 
-        header {
-            display: flex;
-            flex-direction: row;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 30px;
-            background-color: #4c0e00;
-            border-bottom: 1.5px solid #1e0000;
-            flex-grow: 0; 
-        }
-
-        .logo img {
-            height: 50px;
-            width: 50px;
-            margin: 0;
-            padding: 0;
-            border-radius: 10px;
-        }
-
-        nav a {
-            text-decoration: none;
-            color: white;
-            margin: 0 15px;
-            font-size: 16px;
-            font-weight: 500;
-        }
-
-        .auth a {
-            margin-left: 10px;
-            padding: 10px 18px;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            border: 1px solid #ffffff;
-            text-decoration: none;
-            cursor: pointer;
-            transition: all 0.1s ease-in-out 0s;
-        }
-
-        .auth a:hover {
-            border: 1px solid #4c0e00;
-            color: #4c0e00;
-            background: #ffffff;
-        }
-
-      .favorite-list-container {
-        padding: 15px;
+        height: 100%;
+         width: 100%;
+        font-family: 'Times New Roman', Times, serif;
+        display: flex;
+         flex-direction: column;
+        background-color: #f5f0ee;
       }
 
-      .favorite-list-containerh h1 {
-        font-size: 18px;
-        margin: 0;
-        padding: 0;
+      header {
+        display: flex;
+         flex-direction: row;
+        justify-content: space-between;
+         align-items: center;
+        padding: 10px 30px;
+        background-color: #4c0e00;
+        border-bottom: 1.5px solid #1e0000;
+        flex-shrink: 0;
+      }
+      .logo img { 
+        height: 50px;
+         width: 50px; 
+         border-radius: 10px;
+         }
+      nav a {
+        text-decoration: none;
+         color: white;
+        margin: 0 15px; 
+        font-size: 16px;
+         font-weight: 500;
+      }
+      nav a:hover {
+         color: #f0c090;
+         }
+
+      .auth a {
+        margin-left: 10px;
+         padding: 10px 18px;
+        color: white;
+         border-radius: 5px;
+        border: 1px solid #ffffff; text-decoration: none;
+        cursor: pointer; 
+        transition: all 0.1s ease-in-out;
+      }
+      .auth a:hover { 
+        border-color: #4c0e00;
+        color: #4c0e00;
+         background: #ffffff; 
+        }
+
+      .page-banner {
+        background-color: #4c0e00;
+        padding: 40px 40px 30px 40px;
+        color: white;
+        flex-shrink: 0;
+      }
+      .page-banner h1 {
+        font-size: 32px;
+        font-weight: bold;
+        letter-spacing: 1px;
+        margin-bottom: 6px;
+      }
+      .page-banner p {
+        font-size: 15px;
+        color: #e0c0b0;
+        font-style: italic;
       }
 
-      .favorite-list-container p {
-        margin: 0;
-        padding: 0;
+      main {
+        flex-grow: 1;
+        padding: 30px 40px;
+        max-width: 1000px;
+        width: 100%;
+        margin: 0 auto;
+      }
+
+      .section-label {
+        font-size: 13px;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        color: #4c0e00;
+        font-weight: 700;
+        margin-bottom: 16px;
+        border-bottom: 2px solid #4c0e00;
+        padding-bottom: 6px;
       }
 
       .favorite-item {
         display: flex;
         align-items: center;
-        justify-content: start;
-        max-width: 900px;
-        margin: 10px 0;
+        justify-content: space-between;
+        background: white;
+        border-radius: 12px;
+        padding: 14px 18px;
+        margin-bottom: 14px;
+        box-shadow: 0 2px 8px rgba(76, 14, 0, 0.08);
+        border-left: 4px solid #4c0e00;
+        transition: transform 0.1s ease, box-shadow 0.1s ease;
       }
-
-      .favorite-item img {
-        height: 80px;
-        width: 80px;
-        object-fit: contain;
-        border-radius: 3px;
+      .favorite-item:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 14px rgba(76, 14, 0, 0.15);
       }
-
-      .details {
-        margin: 0 15px;
-      }
-
-      .details p {
-        margin: 0;
-        padding: 0;
-      }
-
-      .details .name {
-        font-size: 16px;
-        font-weight: 500;
-      }
-
-      .details .ingredients {
-        font-size: 14px;
-        color:  rgb(150, 150, 150);
-        margin: 5px 0;
-      }
-
-      .description {
+      .favorite-left {
         display: flex;
-        margin: 0;
+        align-items: center;
+        gap: 16px;
+      }
+      .favorite-item img {
+        height: 75px;
+        width: 75px;
+        object-fit: cover;
+        border-radius: 10px;
+        border: 2px solid #f0e0d8;
+      }
+      .details .name {
+        font-size: 17px;
+        font-weight: 700;
+        color: #2a0800;
+        margin-bottom: 4px;
+      }
+      .details .sub {
+        font-size: 13px;
+        color: #999;
+        font-style: italic;
       }
 
-      .description p {
-        font-size: 12px;
-        background: rgb(209, 206, 206);
-        padding: 5px 10px;
-        margin-right: 5px;
-        border-radius: 4px;
-      }
-
-      .favorite-item button {
-        background: rgb(209, 49, 84);
-        border: none;
-        padding: 10px 8px;
-        border-radius: 4px;
-        color: rgba(0, 0, 0);
+      .remove-btn {
+        background: transparent;
+        border: 1.5px solid #c0392b;
+        color: #c0392b;
+        padding: 8px 16px;
+        border-radius: 10px;
         cursor: pointer;
+        font-size: 13px;
+        font-family: 'Times New Roman', Times, serif;
+        transition: all 0.15s ease;
+        white-space: nowrap;
+      }
+      .remove-btn:hover {
+        background: #c0392b;
+        color: white;
       }
 
-      .favorite-item button:hover {
-        background: rgba(209, 49, 84, 0.9);
+      .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+        color: #999;
       }
+      .empty-state p {
+        font-size: 16px;
+        margin-bottom: 12px;
+      }
+      .empty-state a {
+        color: #4c0e00;
+        font-weight: 600;
+        text-decoration: underline;
+      }
+
+      footer {
+        flex-shrink: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 50px;
+        background-color: #222;
+        color: #ffffff;
+        font-size: 13px;
+      }
+
     </style>
   </head>
 
   <body>
     <header>
-        <a href="index.html" class="logo">
-            <img src="sb_logo_2.png" alt="Logo">
-        </a>
-        
-        <nav>
-            <a href="index.html">Home</a>
-            <a href="item.html">Items</a>
-            <a href="favorite.html">Favorites</a>
-        </nav>
-
-        
-        <div class="auth">
-            <a href="log-in.html">Log In</a>
-            <a href="sign-up.html">Sign Up</a>
-        </div>
+      <a href="index.html" class="logo">
+        <img src="sb_logo_2.png" alt="Logo">
+      </a>
+      <nav>
+        <a href="index.html">Home</a>
+        <a href="item.html">Items</a>
+        <a href="favorite.html">Favorites</a>
+      </nav>
+      <div class="auth">
+        <a href="log-in.html">Log In</a>
+        <a href="sign-up.html">Sign Up</a>
+      </div>
     </header>
 
-    <main class="favorite-list-container">
+    <div class="page-banner">
       <h1>Your Favorites</h1>
-      <p>___________________________________________________________________________________________________</p>
-      <!-- template for one favorite item -->
-      <div class="favorite-item">
-        <img src="https://www.thecocktaildb.com/images/media/drink/bry4qh1582751040.jpg" alt="">
+      <p>Cocktails you've saved for later</p>
+    </div>
 
-        <div class="details">
-          <p class="name">
-            Blue Margarita
-          </p>
-          <p class="ingredients">
-            Tequila, Blue Curacao, Lime Juice, Salt
-          </p>
-          
-          <div class="description">
-            <p>Ordinary Drink</p>
-            <p>Alcoholic</p>
-            <p>Cocktail Glass</p>
-          </div>
-        </div>
-
-        <button>
-          Remove From Favorites
-        </button>
-      </div>
-
-      <div class="favorite-item">
-        <img src="https://www.thecocktaildb.com/images/media/drink/5noda61589575158.jpg" alt="">
-
-        <div class="details">
-          <p class="name">
-            Margarita
-          </p>
-          <p class="ingredients">
-            Tequila, Triple Sec, Lime Juice, Salt 
-          </p>
-          
-          <div class="description">
-            <p>Ordinary Drink</p>
-            <p>Alcoholic</p>
-            <p>Cocktail Glass</p>
-          </div>
-        </div>
-
-        <button>
-          Remove From Favorites
-        </button>
+    <main>
+      <p class="section-label">Saved Cocktails</p>
+      <div id="favorites-list">
+        <div class="empty-state"><p>Loading your favorites...</p></div>
       </div>
     </main>
 
+    <footer>
+      <p>© 2026 SB Cocktails | All Rights Reserved</p>
+    </footer>
+
     <script>
       document.addEventListener('DOMContentLoaded', function () {
-        firebase.auth().onAuthStateChanged(function (user) {
-            const authDiv = document.querySelector('.auth');
-            if (user) {
-                authDiv.innerHTML = `
-                    <a href="favorites.html">Favorites</a>
-                    <a href="#" id="logoutBtn">Log Out</a>
-                `;
-                document.getElementById('logoutBtn').addEventListener('click', function (e) {
-                    e.preventDefault();
-                    firebase.auth().signOut().then(() => {
-                        window.location.href = 'index.html';
-                    });
-                });
-            } else {
-                authDiv.innerHTML = `
-                    <a href="log-in.html">Log In</a>
-                    <a href="sign-up.html">Sign Up</a>
-                `;
-            }
+
+        const authDiv = document.querySelector('.auth');
+        authDiv.style.visibility = 'hidden';
+
+        firebase.auth().onAuthStateChanged(async function (user) {
+          if (user) {
+            authDiv.innerHTML = `
+              <a href="favorite.html">Favorites</a>
+              <a href="#" id="logoutBtn">Log Out</a>
+            `;
+            document.getElementById('logoutBtn').addEventListener('click', function (e) {
+              e.preventDefault();
+              firebase.auth().signOut().then(() => {
+                window.location.href = 'index.html';
+              });
+            });
+
+            loadFavorites(user.uid);
+
+          } else {
+            window.location.href = 'log-in.html';
+          }
+
+          authDiv.style.visibility = 'visible';
         });
-    });
+
+        async function loadFavorites(uid) {
+          const db = firebase.firestore();
+          const list = document.getElementById('favorites-list');
+
+          try {
+            const snapshot = await db.collection('favourites')
+              .where('uid', '==', uid)
+              .get();
+
+            if (snapshot.empty) {
+              list.innerHTML = `
+                <div class="empty-state">
+                  <p>You have no favorites yet.</p>
+                  <p>Browse <a href="item.html">Items</a> to add some!</p>
+                </div>`;
+              return;
+            }
+
+            let html = '';
+            snapshot.forEach(doc => {
+              const d = doc.data();
+              html += `
+                <div class="favorite-item" id="fav-${doc.id}">
+                  <div class="favorite-left">
+                    <img src="${d.cocktailThumb}" alt="${d.cocktailName}">
+                    <div class="details">
+                      <p class="name">${d.cocktailName}</p>
+                      <p class="sub">Saved to your collection</p>
+                    </div>
+                  </div>
+                  <button class="remove-btn" onclick="removeFavorite('${doc.id}')">✕ Remove</button>
+                </div>
+              `;
+            });
+            list.innerHTML = html;
+
+          } catch (error) {
+            console.log(error);
+            list.innerHTML = '<div class="empty-state"><p>Error loading favorites.</p></div>';
+          }
+        }
+
+        window.removeFavorite = async function(docId) {
+          const db = firebase.firestore();
+          try {
+            await db.collection('favourites').doc(docId).delete();
+            document.getElementById(`fav-${docId}`).remove();
+
+            const list = document.getElementById('favorites-list');
+            if (list.children.length === 0) {
+              list.innerHTML = `
+                <div class="empty-state">
+                  <p>You have no favorites yet.</p>
+                  <p>Browse <a href="item.html">Items</a> to add some!</p>
+                </div>`;
+            }
+          } catch (error) {
+            console.log(error);
+          }
+        }
+
+      });
     </script>
   </body>
 </html>

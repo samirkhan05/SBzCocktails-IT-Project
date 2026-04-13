@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <script defer src="/__/firebase/12.12.0/firebase-app-compat.js"></script>
 <script defer src="/__/firebase/12.12.0/firebase-auth-compat.js"></script>
+<script defer src="/__/firebase/12.12.0/firebase-firestore-compat.js"></script> 
 <script defer src="/__/firebase/init.js"></script>
     <title>Items</title>
     <link rel="icon" href="sb_logo_2.png" type="image/x-icon">
@@ -136,15 +137,17 @@
 
         .card {
             min-width: 200px;
-            height: 250px;
+            height: 280px;
             margin: 10px;
             background-color: #ddd;
             border-radius: 10px;
+            overflow: hidden;     
+            flex-shrink: 0;       
         }
 
         .card img {
             width: 100%;
-            height: 85%;
+            height: 75%;
             object-fit: cover;
         }
 
@@ -153,6 +156,20 @@
             color:  black;
             text-align: center;
             margin: 0;
+        }
+         .fav-btn {
+            width: 100%;
+            background: #4c0e00;
+            color: white;
+            border: none;
+            padding: 6px;
+            cursor: pointer;
+            font-size: 13px;
+            border-radius: 0 0 10px 10px;
+        }
+
+        .fav-btn:hover {
+            background: #7a1a00;
         }
 
         .carbtn {
@@ -309,11 +326,13 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
+        const authDiv = document.querySelector('.auth');
+        authDiv.style.visibility = 'hidden';
+
         firebase.auth().onAuthStateChanged(function (user) {
-            const authDiv = document.querySelector('.auth');
             if (user) {
                 authDiv.innerHTML = `
-                    <a href="favorites.html">Favorites</a>
+                    <a href="favorite.html">Favorites</a>
                     <a href="#" id="logoutBtn">Log Out</a>
                 `;
                 document.getElementById('logoutBtn').addEventListener('click', function (e) {
@@ -328,7 +347,8 @@
                     <a href="sign-up.html">Sign Up</a>
                 `;
             }
-        });
+         authDiv.style.visibility = 'visible'; 
+     });
     });
 
     let card = [];
@@ -473,22 +493,62 @@ document.getElementById('searchInput').addEventListener('keypress', function (e)
     }
 });
 
-    function renderResults(drinks) {
-        let results = document.querySelector('#results');
-        if (!drinks) {
-            results.innerHTML = '<p>No cocktails found.</p>';
+function renderResults(drinks) {
+    let results = document.querySelector('#results');
+    if (!drinks) {
+        results.innerHTML = '<p>No cocktails found.</p>';
+        return;
+    }
+    let html = '';
+    for (let d of drinks) {
+        html += `
+            <div class="card">
+                <img src="${d.strDrinkThumb}" alt="${d.strDrink}">
+                <p>${d.strDrink}</p>
+                <button class="fav-btn" onclick="addToFavorites('${d.idDrink}', '${d.strDrink.replace(/'/g, "\\'")}', '${d.strDrinkThumb}')">
+                    ♥ Favorite
+                </button>
+            </div>
+        `;
+    }
+    results.innerHTML = html;
+}
+ async function addToFavorites(id, name, thumb) {
+        const user = firebase.auth().currentUser;
+
+        if (!user) {
+            alert('Please log in to save favorites.');
+            window.location.href = 'log-in.html';
             return;
         }
-        let html = '';
-        for (let d of drinks) {
-            html += `
-                <div class="card">
-                    <img src="${d.strDrinkThumb}" alt="${d.strDrink}">
-                    <p>${d.strDrink}</p>
-                </div>
-            `;
+
+        try {
+            const db = firebase.firestore();
+
+            // Check if already favorited
+            const existing = await db.collection('favourites')
+                .where('uid', '==', user.uid)
+                .where('cocktailId', '==', id)
+                .get();
+
+            if (!existing.empty) {
+                alert('Already in your favorites!');
+                return;
+            }
+
+            await db.collection('favourites').add({
+                uid: user.uid,
+                cocktailId: id,
+                cocktailName: name,
+                cocktailThumb: thumb,
+                savedAt: firebase.firestore.FieldValue.serverTimestamp()
+            });
+
+            alert(`${name} added to favorites!`);
+        } catch (error) {
+            console.log(error);
+            alert('Error saving favorite.');
         }
-        results.innerHTML = html;
     }
 
     getCategories();
