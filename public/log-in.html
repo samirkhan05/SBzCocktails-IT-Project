@@ -212,6 +212,10 @@
             errorMsg.textContent = 'Invalid email or password.';
           }
         });
+        
+        if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/sw.js');
+    }
       });
     </script>
   </body>

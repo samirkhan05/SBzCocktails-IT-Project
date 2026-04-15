@@ -550,6 +550,10 @@ function renderResults(drinks) {
             alert('Error saving favorite.');
         }
     }
+    
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/sw.js');
+    }
 
     getCategories();
     getAlcohol();

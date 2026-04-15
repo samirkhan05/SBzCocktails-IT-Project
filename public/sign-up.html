@@ -203,6 +203,9 @@
             errorMsg.textContent = error.message;
           }
         });
+        if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/sw.js');
+    }
       });
     </script>
   </body>

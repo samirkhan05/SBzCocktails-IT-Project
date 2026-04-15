@@ -1,18 +1,19 @@
 {
-  "name": "SBcocktails Project",
-  "short_name": "SBcocktails",
-  "start_url": "index.html",
+  "name": "SB Cocktails",
+  "short_name": "SBCocktails",
+  "description": "Discover and save your favourite cocktails",
+  "start_url": "/index.html",
   "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#000000",
+  "background_color": "#4c0e00",
+  "theme_color": "#4c0e00",
   "icons": [
     {
-      "src": "assets/icon-192.png",
+      "src": "sb_logo_2.png",
       "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "assets/icon-512.png",
+      "src": "sb_logo_2b.png",
       "sizes": "512x512",
       "type": "image/png"
     }

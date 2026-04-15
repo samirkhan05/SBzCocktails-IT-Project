@@ -211,6 +211,12 @@
       // Show auth buttons only after Firebase has confirmed state
       authDiv.style.visibility = 'visible';
     });
+
+    // Register service worker for PWA functionality
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/sw.js');
+    }
+
   });
 </script>
   </body>
