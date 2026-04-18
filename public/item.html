@@ -628,20 +628,6 @@ document.getElementById('searchInput').addEventListener('keypress', function (e)
     }
 });
 
-//Get ingredients for each drink to add to card
-function getIngredients(drink) {
-    let ingredients = [];
-    for (let i = 1; i <= 15; i++) {
-        const ing = drink[`strIngredient${i}`];
-        const measure = drink[`strMeasure${i}`];
-        if (ing && ing !== '' && ing !== ' ') {
-            const ingredient = measure ? measure + ' ' + ing : ing;
-            ingredients.push(ingredient);
-        }
-    }
-    return ingredients;
-}
-
 // Render drinks-grid when searching for a drink
 function renderResults(drinks) {
     let results = document.querySelector('#results');
