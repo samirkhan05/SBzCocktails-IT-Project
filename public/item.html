@@ -26,6 +26,7 @@
             flex-direction: column;
         }
 
+        /* Header CSS */
         header {
             display: flex;
             flex-direction: row;
@@ -61,6 +62,7 @@
             border-radius: 5px;
             border: 1px solid #ffffff;
             text-decoration: none;
+            visibility: visible;
             cursor: pointer;
             transition: all 0.1s ease-in-out 0s;
         }
@@ -71,9 +73,7 @@
             background: #ffffff;
         }
 
-        main {
-            flex-grow: 1; 
-        }
+        /* Hero Section CSS */
 
         .herosection {
             width: 100%;
@@ -109,6 +109,8 @@
             font-style: italic;
             text-shadow: 1px 1px 3px rgba(0,0,0,0.8);
         }
+
+        /* Carousel CSS */
 
         .carousel {
             padding: 50px;
@@ -183,6 +185,8 @@
             border-radius: 50%;
         }
 
+        /* Filters CSS */
+
         .filters {
             padding: 40px;
         }
@@ -225,13 +229,121 @@
             color: orange;
         }
 
-        #results {
-            padding: 40px;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
-            min-height: 200px;
+        .drinks-grid {
+            margin: 20px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            column-gap: 10px;
+            row-gap: 10px;
             background-color: #eee;
+            padding: 20px;
+        }
+
+        /* Drinks Card CSS - Ingredients */
+        .drink-item {
+            display: flex;
+            flex-direction: column;
+            background: rgba(237, 225, 215, 0.726);
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .drink-item img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 5px;
+        }
+
+        .drink-detail {
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+            padding-bottom: 8px;
+        }
+
+        .drink-detail p {
+            padding: 0 8px;
+        }
+
+        .name {
+            font-size: 17px;
+            font-weight: 600;
+            margin: 8px 0;
+        }
+
+        .description {
+            font-size: 12px;
+            color: gray;
+            margin: 4px 0;
+        }
+
+        .instruction-header {
+            margin: 5px 0;
+            font-size: 12px;
+            font-weight: 600;
+            padding: 0 8px;
+        }
+
+        .instruction {
+            margin: 0;
+            font-size: 13px;
+            line-height: 1.5;
+            padding: 0 8px;
+        }
+
+        #ingredients-view table,
+        #instructions-vew table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 0;
+        }
+
+        table th {
+            font-size: 12px;
+            text-align: left;
+            padding: 4px 8px;
+        }
+
+        table tr {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            border-bottom: 0.5px solid black;
+            font-size: 12px;
+            padding: 3px 8px;
+        }
+
+        table thead tr {
+            border-bottom: 1px solid black;
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: space-around;
+            margin-top: auto;
+            padding: 8px 8px;
+            width: 100%;
+        }
+
+        .buttons button {
+            border: none;
+            background: rgb(209, 49, 84);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .buttons button:hover {
+            background: rgba(209, 49, 84, 0.9);
         }
 
         footer {
@@ -297,7 +409,7 @@
                 <div class="column">
                     <h3>Category</h3>
                     <ul id="catlist">
-
+                        
                     </ul>
                 </div>
                 <div class="column">
@@ -315,7 +427,7 @@
             </div>
         </section>
 
-        <section id="results">
+        <section class="drinks-grid" id="results">
             <p>Select a filter to see cocktails...</p>
         </section>
     </main>
@@ -463,11 +575,34 @@
         try {
             let response = await fetch(`https://www.thecocktaildb.com/api/json/v1/1/filter.php?${type}=${encodeURIComponent(value)}`);
             let data = await response.json();
-            renderResults(data.drinks);
+
+            if (!data.drinks) {
+                document.querySelector('#results').innerHTML = '<p>No cocktails found.</p>';
+                return;
+            }
+
+            // Fetch full details for each drink (filter endpoint only gives id/name/thumb)
+            const detailPromises = data.drinks.map(d =>
+                fetch(`https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=${d.idDrink}`)
+                    .then(r => r.json())
+                    .then(r => r.drinks[0])
+            );
+            const fullDrinks = await Promise.all(detailPromises);
+
+            // const fullDrinks = [];
+            // for (let drink of data.drinks) {
+            //     const detailResponse = await fetch(`https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=${drink.idDrink}`);
+            //     const detailData = await detailResponse.json();
+            //     fullDrinks.push(detailData.drinks[0]);
+            // }
+
+            renderResults(fullDrinks);
+
         } catch (error) {
             console.log(error);
         }
     }
+
     // Search function added to search for cocktails, uses render results
 async function searchCocktails() {
     const query = document.getElementById('searchInput').value.trim();
@@ -493,26 +628,125 @@ document.getElementById('searchInput').addEventListener('keypress', function (e)
     }
 });
 
+//Get ingredients for each drink to add to card
+function getIngredients(drink) {
+    let ingredients = [];
+    for (let i = 1; i <= 15; i++) {
+        const ing = drink[`strIngredient${i}`];
+        const measure = drink[`strMeasure${i}`];
+        if (ing && ing !== '' && ing !== ' ') {
+            const ingredient = measure ? measure + ' ' + ing : ing;
+            ingredients.push(ingredient);
+        }
+    }
+    return ingredients;
+}
+
+// Render drinks-grid when searching for a drink
 function renderResults(drinks) {
     let results = document.querySelector('#results');
     if (!drinks) {
         results.innerHTML = '<p>No cocktails found.</p>';
         return;
     }
+
     let html = '';
-    for (let d of drinks) {
+    for (let drink of drinks) {
+
+        const safeId = drink.idDrink;
+        const safeName = drink.strDrink.replace(/'/g, "\\'");
+        const instructions = drink.strInstructions || 'No instructions available.';
+
+        // Build ingredients list first
+        const ingredients = [];
+
+        for (let i = 1; i <= 15; i++) {
+            const ingredient = drink[`strIngredient${i}`];
+            const measure = drink[`strMeasure${i}`];
+            if (ingredient && ingredient !== '' && ingredient !== ' ') {
+                let measureValue;
+                if (measure) {
+                    measureValue = measure;
+                } else {
+                    measureValue = '-';
+                }
+                ingredients.push({ name: ingredient, measure: measureValue });
+            }
+        }
+
+        // Build table rows from ingredients list
+        let rows = '';
+        for (let ingredient of ingredients) {
+            rows += `
+                <tr>
+                    <td>${ingredient.name}</td>
+                    <td>${ingredient.measure}</td>
+                </tr>
+            `;
+        }
+
+        // Build entire card
         html += `
-            <div class="card">
-                <img src="${d.strDrinkThumb}" alt="${d.strDrink}">
-                <p>${d.strDrink}</p>
-                <button class="fav-btn" onclick="addToFavorites('${d.idDrink}', '${d.strDrink.replace(/'/g, "\\'")}', '${d.strDrinkThumb}')">
-                    ♥ Favorite
-                </button>
+            <div class="drink-item">
+                <img src="${drink.strDrinkThumb}" alt="${drink.strDrink}">
+
+                <div class="drink-detail">
+                    <p class="name">${drink.strDrink}</p>
+                    <p class="description">
+                        ${drink.strCategory} | ${drink.strAlcoholic} | ${drink.strGlass}
+                    </p>
+
+                    <div id="ingredients-${safeId}">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Ingredients (${ingredients.length})</th>
+                                    <th>Measure</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${rows}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div id="instructions-${safeId}" style="display:none;">
+                        <p class="instruction-header">Instructions</p>
+                        <p class="instruction">${instructions}</p>
+                    </div>
+
+                    <div class="buttons">
+                        <button onclick="addToFavorites('${safeId}', '${safeName}', '${drink.strDrinkThumb}')">
+                            ♥ Save To Favorites
+                        </button>
+                        <button onclick="showDetails('${safeId}', this)">
+                            Show Details
+                        </button>
+                    </div>
+                </div>
             </div>
         `;
     }
+
     results.innerHTML = html;
 }
+
+// Toggle between ingredients and details
+function showDetails(id, btn) {
+    const ingredientsDiv = document.getElementById(`ingredients-${id}`);
+    const instructionsDiv = document.getElementById(`instructions-${id}`);
+
+    if (ingredientsDiv.style.display !== 'none') {
+        ingredientsDiv.style.display = 'none';
+        instructionsDiv.style.display = 'block';
+        btn.textContent = 'Show Ingredients';
+    } else {
+        ingredientsDiv.style.display = 'block';
+        instructionsDiv.style.display = 'none';
+        btn.textContent = 'Show Details';
+    }
+}
+
  async function addToFavorites(id, name, thumb) {
         const user = firebase.auth().currentUser;
 
